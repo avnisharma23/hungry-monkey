@@ -2,16 +2,13 @@
 class Monkey {
   constructor(){
     this.x = 0;
-    this.y = 500; //canvas.height - 70;
+    this.y = 500; 
     this.movingLeft = false;
     this.movingRight = false;
 
-    const newImage = new Image();
-      newImage.addEventListener('load', () => {
-        // Once image loaded => draw
-        this.img = newImage;
-      });
-      newImage.src = './images/monkey.png';
+    this.img = new Image()
+    this.img.src = './images/monkey.png';
+    
   }
   draw() {
     ctx.drawImage(this.img, this.x, this.y);
@@ -38,13 +35,13 @@ class Monkey {
     return this.x;
   }
   right() {
-    return this.x + this.width;
+    return this.x + this.img.width;
   }
   top() {
     return this.y;
   }
   bottom() {
-    return this.y + this.height;
+    return this.y + this.img.height;
   }
 }
 
@@ -66,12 +63,11 @@ class Banana {
     }
     this.x = Math.random() * (canvas.width);
 
-    if(this.x + this.img.width > canvas.width)
-      this.x = this.x - this.img.width;
+    if(this.x + this.img.width > canvas.width)  //check if babana is outside of canvas
+      this.x = this.x - this.img.width;         //shift the banana if outside the canvas
 
     this.y = Math.random() * (canvas.height / 4);
-    this.width = 70;
-    this.height = 70;
+ 
   }
   draw() {
     ctx.drawImage(this.img, this.x, this.y);
@@ -80,13 +76,13 @@ class Banana {
     return this.x ;
   }
   right() {
-    return this.x + this.width;
+    return this.x + this.img.width;
   }
   top() {
     return this.y ;
   }
   bottom() {
-    return this.y + this.height;
+    return this.y + this.img.height;
   }
 }
 
@@ -220,18 +216,8 @@ function updateObstacles() {
     bananas[i].draw();
   }
    frames += 4;
-  if (frames % 120 === 0) {
-    let x = canvas.height;
-    let minWidth = 90;
-    let maxWidth = 300;
-    let width = Math.floor(
-      Math.random() * (maxWidth - minWidth + 1) + minWidth
-    );
-    let minGap = 0;
-    let maxGap = 400;
-    let gap = Math.floor(Math.random() * (maxGap - minGap + 1) + minGap); 
-    bananas.push(new Banana(gap));
-    //console.log(bananas);
+  if (frames % 120 === 0) {   
+    bananas.push(new Banana());    
   }
   
 }
@@ -264,38 +250,26 @@ function stop() {
 function catchedBanana() {
 
   bananas.forEach(banana => {
-  if (
-    banana.y + banana.img.height >= monkey.y  &&
-    ((banana.x + banana.img.width  < monkey.x  + monkey.img.width &&
-      banana.x + banana.img.width  > monkey.x) ||
-      banana.x > monkey.x &&  banana.x < monkey.x  + monkey.img.width )
-  ) 
-  {
-    banana.y = 2000;
-    banana.x = 2000;
-    score += 10;
-    console.log(score);
+  
+    if (
+        banana.bottom() >= monkey.top()  &&
+        (
+          (banana.right()  < monkey.right() && banana.right() > monkey.left()) ||
+          (banana.left() > monkey.left() && banana.left() < monkey.right() )
+        ) // checking if both the ends of banana is touching the monkey
+      )  
+      {
+        score += 10;
+        console.log(score);
 
-    bananas.splice(bananas.indexOf(banana),1) // remove catched banana
+        bananas.splice(bananas.indexOf(banana),1) // remove catched banana
 
-  }
-
-
-  /* if(
-    monkey.bottom() < banana.top() ||
-    monkey.top() > banana.bottom() ||
-    monkey.right() < banana.left() + 5 ||
-    monkey.left() > banana.right() - 5
-  )
-  {
-
-   // banana.y = 2000;
-    //banana.x = 2000;
-    return true ;
-  } */
-});
+      }
+    
+  });
 
 }
+
 function checkGameOver()
 {
 
