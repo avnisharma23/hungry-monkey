@@ -1,0 +1,60 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="styles/style.css" />
+  
+  
+  <title>Hungry Monkey</title>
+</head>
+
+<body>
+  
+    <div id="start-div">
+      <h1>Welcome to Hungry Monkey</h1>
+      <br />
+      <p class="ptext">
+        The Monkey needs your help! <br />
+        Monkey can go to sleep if he eats 300 bananans;
+      </p>
+      <div>
+        <button id="startBtn" class="startbuttton">Start Game</button>
+      </div>
+    </div>
+   
+    <div id="games_div" style="display: none;">
+      <canvas id="gamecanvas" width="1024" height="600"></canvas>
+    </div>
+  
+    <div id="gameover-div" style="display: none;">
+      <h1 class="rainbowtext">GAME OVER!!!</h1>
+      <p class="scoretext"><span id="finalscore" ></span> </span></p>
+      <p class="ptext">
+        Better Luck next time! <br />
+        Play again to make the Monkey happy. <br /> <br />
+      </p>
+      <img src="./images/monkeysad.png"   alt="Sad Monkey" width ="15%"/>
+      
+    </div>
+    <div id="youwindiv" style="display: none;">
+        <h1 class="rainbowtext">YOU WIN!!!</h1>
+        <p class="scoretext"><span id="finalscore" ></span> </span></p>
+        <p class="ptext">
+          Monkey is Happy Now <br /> <br />
+        </p>
+        <img src="./images/happymonkey.jpg"   alt="Happy Monkey" width ="15%"/>
+        
+      </div> 
+
+      <div id = "restartdiv" style="display: none;">
+       
+        <button id="restart" class="startbuttton">Restart Game</button>
+     </div>
+    
+      <script type="text/javascript" src="js/index.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,76 @@
+* {
+    margin: 0;
+    padding: 0;
+    
+    }
+  
+  .fontstyle {
+      font-family: 'Pacifico', cursive;
+  }
+  
+  div{
+    align-content: center;
+    align-items: center;
+  }
+  
+  body{
+    margin: 0;
+    padding: 0;
+    flex-direction: column;
+    font-family: 'Pacifico', cursive;
+    background-color:lightgreen;
+    align-items: center;
+    align-content: center;
+    text-align: center;
+    
+  }
+  .ptext {
+    font-family: Arial, Helvetica, sans-serif;
+    padding: 10px;
+    align-self: center;
+    font-size: 25px;
+    color:red;
+    
+  }
+  h1{
+   font-size: 70px;
+  font-weight: 600;
+  background-image: linear-gradient(to right,brown, #93d3b5);
+  color: transparent;
+  background-clip: text;
+  -webkit-background-clip: text;
+  }
+  
+  canvas{
+    align-self: inherit;
+    flex-direction: column;
+    vertical-align: auto;
+    align-content: center;
+    border:3px solid  #18ab29;
+    margin: 20px;
+  }
+
+ .scoretext{
+    padding: 20px;
+    margin: 20px;
+    font-family: Arial, Helvetica, sans-serif;
+    text-align: center;
+    font-size: 42px;
+    color: #18ab29;
+  }
+
+.startbuttton{
+  padding: 20px;
+  margin: 20px;
+  border:3px solid;
+  border-radius: 30px;
+  font-family: Arial, Helvetica, sans-serif;
+  text-align: center;
+  font-size: 20px;
+  color: #18ab29;
+  cursor: pointer;
+}
+
+
+  
+  
