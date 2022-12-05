@@ -1,12 +1,10 @@
 
-let score = 0;
-
 class Monkey {
   constructor(){
     this.x = 0;
     this.y = 500; //canvas.height - 70;
-    //this.speedX = 0;
-    //this.speedY = 0;
+    this.movingLeft = false;
+    this.movingRight = false;
 
     const newImage = new Image();
       newImage.addEventListener('load', () => {
@@ -25,7 +23,17 @@ class Monkey {
   moveRight() {
     if ( this.x + this.img.width < canvas.width)
       this.x += 20;
+      
   }
+  move(){
+
+    if(this.movingLeft && this.x > 0 )
+      this.x -= 20;
+    else if(this.movingRight && this.x + this.img.width < canvas.width )
+      this.x += 20;
+
+  }
+
   left() {
     return this.x;
   }
@@ -43,10 +51,7 @@ class Monkey {
 
 class Banana {
   constructor(){
-    this.x = Math.random() * canvas.width;
-    this.y = Math.random() * (canvas.height / 3);
-    this.width = 70;
-    this.height = 70;
+    
     this.img = new Image();
 
     if(Math.random()> 0.5) // 50% probality of random number > 0.5
@@ -59,12 +64,14 @@ class Banana {
       this.img.src = './images/bananasGreen.png';
       this.color = "green";
     }
-    /* const newImage = new Image();
-      newImage.addEventListener('load', () => {
-        // Once image loaded => draw
-        this.img = newImage;
-      });
-      newImage.src = './images/bananasYellow.png'; */
+    this.x = Math.random() * (canvas.width);
+
+    if(this.x + this.img.width > canvas.width)
+      this.x = this.x - this.img.width;
+
+    this.y = Math.random() * (canvas.height / 4);
+    this.width = 70;
+    this.height = 70;
   }
   draw() {
     ctx.drawImage(this.img, this.x, this.y);
@@ -100,6 +107,10 @@ let gameover = document.querySelector("#gameover-div");
 let intervalId;
 let frames = 0;
 let missedbananas = 0;
+let score = 0;
+
+//let isMovingLeft = false;
+//let isMovingRight = false;
 
 //Images
 const backgroundImage = new Image();
@@ -141,15 +152,23 @@ document.addEventListener('keydown', event => {
   //console.log('event keyCode', event.keyCode);
   switch (event.keyCode) {
     case 37:
-      monkey.moveLeft();
+      monkey.movingLeft = true;
+      monkey.movingRight = false;
       //console.log('left', monkey);
       break;
     case 39:
-      monkey.moveRight();
+      monkey.movingRight=true;
+      monkey.movingLeft = false;
       //console.log('right', monkey);
       break;
   }
 });
+
+document.addEventListener("keyup", () => {
+  monkey.movingLeft = false;
+  monkey.movingRight = false;
+  
+}); 
 
 function startGame()
 { 
@@ -161,9 +180,7 @@ function startGame()
   
   ctx.drawImage(backgroundImage, 0, 0);
   ctx.drawImage(scoreBoardImage, 0, 0); // exit game 
-
   reset();
- 
   monkey.draw() 
   restartdiv.style.display = 'none';
 }
@@ -172,26 +189,24 @@ function drawBackground()
 {
     gamearea.style.display = 'none';
     gameover.style.display = 'none';
-    
 }
 
 
 function updateGame() {
- ctx.clearRect(0, 0, canvas.width, canvas.height); // clearing canvas for our next animation
- // drawBackground() // redrawing the background
- ctx.drawImage(backgroundImage, 0, 0);
- ctx.drawImage(scoreBoardImage, 0, 0);
-  monkey.draw(); // redrawing the car
-  updateObstacles() ;// drawing/redrawing the obstacles
-  //updateScore() // redraw/update the score
+
+  ctx.clearRect(0, 0, canvas.width, canvas.height); // clearing canvas for our next animation
+ 
+  ctx.drawImage(backgroundImage, 0, 0);
+  ctx.drawImage(scoreBoardImage, 0, 0);
+  monkey.move();
+  monkey.draw(); // redrawing the monkey
+  
+  updateObstacles() ;// drawing/redrawing the obstacles(banana)
   catchedBanana();
   checkGameWon();
   checkGameOver();
-  // requestAnimationFrame(updateGame)
+  fillscore();
   
-  ctx.fillStyle = "#EC6467";
-  ctx.font = "22px Pacifico";
-  ctx.fillText(`Score: ${score}`, 75, 45);
 }
 
 function updateObstacles() {
@@ -204,7 +219,7 @@ function updateObstacles() {
 
     bananas[i].draw();
   }
-   frames += 5;
+   frames += 4;
   if (frames % 120 === 0) {
     let x = canvas.height;
     let minWidth = 90;
@@ -251,8 +266,9 @@ function catchedBanana() {
   bananas.forEach(banana => {
   if (
     banana.y + banana.img.height >= monkey.y  &&
-    banana.x + banana.img.width  < monkey.x  + monkey.img.width &&
-    banana.x > monkey.x
+    ((banana.x + banana.img.width  < monkey.x  + monkey.img.width &&
+      banana.x + banana.img.width  > monkey.x) ||
+      banana.x > monkey.x &&  banana.x < monkey.x  + monkey.img.width )
   ) 
   {
     banana.y = 2000;
@@ -287,10 +303,9 @@ function checkGameOver()
     if (
       banana.y > canvas.height       
     ) 
-    {
-      
+    {      
       missedbananas ++;
-      bananas.splice(bananas.indexOf(banana),1) // remove missed banana from array because triggering multiple times
+      bananas.splice(bananas.indexOf(banana),1) // remove missed banana from array because triggering multiple times      
     }
   });
 
@@ -308,6 +323,14 @@ function doGameOver() {
 
 }
 
+function fillscore(){
+
+  ctx.fillStyle = "#EC6467";
+  ctx.font = "22px Pacifico";
+  ctx.fillText(`Score: ${score}`, 75, 45);
+  ctx.fillText(`Bananas Missed: ${missedbananas}`, 800, 45);
+
+}
 
 
 
