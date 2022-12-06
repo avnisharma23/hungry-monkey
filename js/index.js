@@ -138,12 +138,6 @@ monkeyImage.src = './images/monkey.png'
   monkeyCry.volume = 0.1;
 
 
-
-
-
-
-
-
 window.addEventListener("load",() => {
   //console.log("Hello");
   
