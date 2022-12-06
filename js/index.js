@@ -1,4 +1,8 @@
 
+
+
+
+
 class Monkey {
   constructor(){
     this.x = 0;
@@ -27,7 +31,7 @@ class Monkey {
 
     if(this.movingLeft && this.x > 0 )
       this.x -= 20;
-    else if(this.movingRight && this.x + this.img.width < canvas.width )
+    else if(this.movingRight && this.x + this.img.width < canvas.width ) // this condition check if monkey is not going outside from the canvas
       this.x += 20;
 
   }
@@ -88,9 +92,6 @@ class Banana {
 }
 
 
-
-
-
 const bananas = [];
 const monkey = new Monkey();
 const canvas = document.getElementById('gamecanvas');
@@ -100,7 +101,7 @@ let startPage = document.querySelector("#start-div");
 let gamearea = document.querySelector("#games_div");
 let gameover = document.querySelector("#gameover-div");
 
-//let monkeyPosRight = 0, monkeyPosDown = 599;
+
 let intervalId;
 let frames = 0;
 let missedbananas = 0;
@@ -123,15 +124,35 @@ const monkeyImage = new Image();
 monkeyImage.src = './images/monkey.png'
 
 
+//music
+  let gameMusic = new Audio();
+  gameMusic.src = "./music/gamemusic.mp3"
+  gameMusic.volume = 0.1;
+
+  let monkeyWinSound = new Audio();
+  monkeyWinSound.src = "./music/baby-monkey-laugh.wav";
+  monkeyWinSound.volume = 0.2;
+
+  let monkeyCry = new Audio();
+  monkeyCry.src = "./music/monkeycry.wav";
+  monkeyCry.volume = 0.1;
+
+
+
+
+
+
+
 
 window.addEventListener("load",() => {
   //console.log("Hello");
+  
   drawBackground(); 
   
-
   //button start - Start Game
   startBtn.addEventListener("click", () => {
     intervalId = setInterval(updateGame, 20);
+    gameMusic.play();
     startGame();
     
   });
@@ -140,7 +161,7 @@ window.addEventListener("load",() => {
     console.log("hh");
     intervalId = setInterval(updateGame, 20);
     startGame();
-    
+    gameMusic.play();
   });
 
 });
@@ -152,10 +173,12 @@ document.addEventListener('keydown', event => {
       monkey.movingLeft = true;
       monkey.movingRight = false;
       //console.log('left', monkey);
+      //gameMusic.play();
       break;
     case 39:
       monkey.movingRight=true;
       monkey.movingLeft = false;
+     // gameMusic.play();
       //console.log('right', monkey);
       break;
   }
@@ -164,13 +187,13 @@ document.addEventListener('keydown', event => {
 document.addEventListener("keyup", () => {
   monkey.movingLeft = false;
   monkey.movingRight = false;
-  
+ 
 }); 
 
 function startGame()
 { 
   
-  startPage.style.display = "none";
+   startPage.style.display = "none";
   gamearea.style.display = "block";
   gameover.style.display = "none";
   youwindiv.style.display = 'none';
@@ -192,8 +215,9 @@ function drawBackground()
 
 function updateGame() {
 
+  
   ctx.clearRect(0, 0, canvas.width, canvas.height); // clearing canvas for our next animation
- 
+  
   ctx.drawImage(backgroundImage, 0, 0);
   ctx.drawImage(scoreBoardImage, 0, 0);
   monkey.move();
@@ -204,6 +228,7 @@ function updateGame() {
   checkGameWon();
   checkGameOver();
   fillscore();
+  gameMusic.play();
   
 }
 
@@ -232,9 +257,12 @@ function checkGameWon()
   if(score > 300)
   {
     stop();
+    
+    monkeyWinSound.play();
     gamearea.style.display = 'none';
     youwindiv.style.display = 'block';
     restartdiv.style.display = 'block';
+   
    }
 }
 
@@ -246,11 +274,12 @@ function reset()
   monkey.y = 500;
   missedbananas = 0;
   score = 0 ;
-  
 }
 
 function stop() {
+ 
   clearInterval(intervalId);
+  gameMusic.pause();
 }
 
 function catchedBanana() {
@@ -295,12 +324,13 @@ function checkGameOver()
 }
 
 function doGameOver() {
-  stop();
+    stop();
+    monkeyCry.play();
   //console.log("gamOver")
     gamearea.style.display = 'none';
     restartdiv.style.display = 'block';
     gameover.style.display = 'block';
-
+    
 }
 
 function fillscore(){
