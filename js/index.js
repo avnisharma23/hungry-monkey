@@ -3,7 +3,8 @@ class Monkey {
   constructor(){
     this.x = 0;
     this.y = 500; 
-    this.movingLeft = false;
+
+    this.movingLeft = false; // to move the monkey smoothly
     this.movingRight = false;
 
     this.img = new Image()
@@ -61,12 +62,12 @@ class Banana {
       this.img.src = './images/bananasGreen.png';
       this.color = "green";
     }
-    this.x = Math.random() * (canvas.width);
+    this.x = Math.random() * (canvas.width); //randomly generates banana from X axis
 
     if(this.x + this.img.width > canvas.width)  //check if babana is outside of canvas
       this.x = this.x - this.img.width;         //shift the banana if outside the canvas
 
-    this.y = Math.random() * (canvas.height / 4);
+    this.y = Math.random() * (canvas.height / 4); //randomly generates banana from y axis
  
   }
   draw() {
@@ -116,7 +117,7 @@ const exitImage = new Image();
 exitImage.src = './images/exit.png'
 
 const scoreBoardImage = new Image();
-scoreBoardImage.src = './images/score-removebg-preview.png';
+scoreBoardImage.src = './images/scoreimage.png';
 
 const monkeyImage = new Image();
 monkeyImage.src = './images/monkey.png'
@@ -176,6 +177,7 @@ function startGame()
   
   ctx.drawImage(backgroundImage, 0, 0);
   ctx.drawImage(scoreBoardImage, 0, 0); // exit game 
+  //reset the game settings
   reset();
   monkey.draw() 
   restartdiv.style.display = 'none';
@@ -205,15 +207,17 @@ function updateGame() {
   
 }
 
-function updateObstacles() {
+//drooping and genarating banana
 
+function updateObstacles() {
+//dropping banana
   for (i = 0; i < bananas.length; i++) {
     if( bananas[i].color == "yellow")
-      bananas[i].y += 2;
+      bananas[i].y += 2;  
     else
       bananas[i].y += 3;
 
-    bananas[i].draw();
+    bananas[i].draw(); 
   }
    frames += 4;
   if (frames % 120 === 0) {   
@@ -222,6 +226,7 @@ function updateObstacles() {
   
 }
 
+// this function check if score limit is reached
 function checkGameWon() 
 {
   if(score > 300)
@@ -233,6 +238,7 @@ function checkGameWon()
    }
 }
 
+// resest game settings
 function reset()
 {
   bananas.length = 0;
@@ -275,10 +281,10 @@ function checkGameOver()
 
   bananas.forEach(banana => {
     if (
-      banana.y > canvas.height       
+      banana.y > canvas.height   // checking if banana cross the canvas
     ) 
     {      
-      missedbananas ++;
+      missedbananas ++; // counting missed banana
       bananas.splice(bananas.indexOf(banana),1) // remove missed banana from array because triggering multiple times      
     }
   });
