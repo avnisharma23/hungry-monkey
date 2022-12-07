@@ -23,9 +23,9 @@ Abililty to store score.
 **Data Structure**
 
 index.js
+monkey.js
 
 Two class are there :
-class Monkey{}
 class Banana {}
 
 Functions :

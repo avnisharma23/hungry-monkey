@@ -1,97 +1,5 @@
 
 
-
-
-
-class Monkey {
-  constructor(){
-    this.x = 0;
-    this.y = 500; 
-
-    this.movingLeft = false; // to move the monkey smoothly
-    this.movingRight = false;
-
-    this.img = new Image()
-    this.img.src = './images/monkey.png';
-    
-  }
-  draw() {
-    ctx.drawImage(this.img, this.x, this.y);
-  }
-  moveLeft() {
-    if ( this.x > 0) 
-      this.x -= 20;
-  }
-  moveRight() {
-    if ( this.x + this.img.width < canvas.width)
-      this.x += 20;
-      
-  }
-  move(){
-
-    if(this.movingLeft && this.x > 0 )
-      this.x -= 20;
-    else if(this.movingRight && this.x + this.img.width < canvas.width ) // this condition check if monkey is not going outside from the canvas
-      this.x += 20;
-
-  }
-
-  left() {
-    return this.x;
-  }
-  right() {
-    return this.x + this.img.width;
-  }
-  top() {
-    return this.y;
-  }
-  bottom() {
-    return this.y + this.img.height;
-  }
-}
-
-
-class Banana {
-  constructor(){
-    
-    this.img = new Image();
-
-    if(Math.random()> 0.5) // 50% probality of random number > 0.5
-    {
-      this.img.src = './images/bananasYellow.png';
-      this.color = "yellow";
-    }
-    else
-    {
-      this.img.src = './images/bananasGreen.png';
-      this.color = "green";
-    }
-    this.x = Math.random() * (canvas.width); //randomly generates banana from X axis
-
-    if(this.x + this.img.width > canvas.width)  //check if babana is outside of canvas
-      this.x = this.x - this.img.width;         //shift the banana if outside the canvas
-
-    this.y = Math.random() * (canvas.height / 4); //randomly generates banana from y axis
- 
-  }
-  draw() {
-    ctx.drawImage(this.img, this.x, this.y);
-  }
-  left() {
-    return this.x ;
-  }
-  right() {
-    return this.x + this.img.width;
-  }
-  top() {
-    return this.y ;
-  }
-  bottom() {
-    return this.y + this.img.height;
-  }
-}
-
-
 const bananas = [];
 const monkey = new Monkey();
 const canvas = document.getElementById('gamecanvas');
@@ -106,9 +14,6 @@ let intervalId;
 let frames = 0;
 let missedbananas = 0;
 let score = 0;
-
-//let isMovingLeft = false;
-//let isMovingRight = false;
 
 //Images
 const backgroundImage = new Image();
@@ -138,60 +43,54 @@ monkeyImage.src = './images/monkey.png'
   monkeyCry.volume = 0.1;
 
 
-window.addEventListener("load",() => {
-  //console.log("Hello");
-  
-  drawBackground(); 
-  
-  //button start - Start Game
-  startBtn.addEventListener("click", () => {
-    intervalId = setInterval(updateGame, 20);
-    gameMusic.play();
-    startGame();
+class Banana {
+  constructor(){
     
-  });
-  
-  restart.addEventListener("click", () => {
-    console.log("hh");
-    intervalId = setInterval(updateGame, 20);
-    startGame();
-    gameMusic.play();
-  });
+    this.img = new Image();
 
-});
+    if(Math.random()> 0.5) // 50% probality of random number > 0.5
+    {
+      this.img.src = './images/bananasYellow.png';
+      this.color = "yellow";
+    }
+    else
+    {
+      this.img.src = './images/bananasGreen.png';
+      this.color = "green";
+    }
+    this.x = Math.random() * (canvas.width); //randomly generates banana from X axis
 
-document.addEventListener('keydown', event => {
-  //console.log('event keyCode', event.keyCode);
-  switch (event.keyCode) {
-    case 37:
-      monkey.movingLeft = true;
-      monkey.movingRight = false;
-      //console.log('left', monkey);
-      //gameMusic.play();
-      break;
-    case 39:
-      monkey.movingRight=true;
-      monkey.movingLeft = false;
-     // gameMusic.play();
-      //console.log('right', monkey);
-      break;
-  }
-});
+    if(this.x + this.img.width > canvas.width)  //check if babana is outside of canvas
+      this.x = this.x - this.img.width;         //shift the banana if its outside the canvas
 
-document.addEventListener("keyup", () => {
-  monkey.movingLeft = false;
-  monkey.movingRight = false;
+    this.y = Math.random() * (canvas.height / 4); //randomly generates banana from y axis
  
-}); 
+  }
+  draw() {
+    ctx.drawImage(this.img, this.x, this.y);
+  }
+  left() {
+    return this.x ;
+  }
+  right() {
+    return this.x + this.img.width;
+  }
+  top() {
+    return this.y ;
+  }
+  bottom() {
+    return this.y + this.img.height;
+  }
+}
+
+
 
 function startGame()
 { 
-  
    startPage.style.display = "none";
   gamearea.style.display = "block";
   gameover.style.display = "none";
   youwindiv.style.display = 'none';
-  
   ctx.drawImage(backgroundImage, 0, 0);
   ctx.drawImage(scoreBoardImage, 0, 0); // exit game 
   //reset the game settings
@@ -207,23 +106,19 @@ function drawBackground()
 }
 
 
-function updateGame() {
-
-  
+function updateGame() 
+{
   ctx.clearRect(0, 0, canvas.width, canvas.height); // clearing canvas for our next animation
-  
   ctx.drawImage(backgroundImage, 0, 0);
   ctx.drawImage(scoreBoardImage, 0, 0);
   monkey.move();
   monkey.draw(); // redrawing the monkey
-  
   updateObstacles() ;// drawing/redrawing the obstacles(banana)
   catchedBanana();
   checkGameWon();
   checkGameOver();
   fillscore();
   gameMusic.play();
-  
 }
 
 //drooping and genarating banana
@@ -251,12 +146,10 @@ function checkGameWon()
   if(score > 300)
   {
     stop();
-    
     monkeyWinSound.play();
     gamearea.style.display = 'none';
     youwindiv.style.display = 'block';
     restartdiv.style.display = 'block';
-   
    }
 }
 
@@ -270,8 +163,8 @@ function reset()
   score = 0 ;
 }
 
-function stop() {
- 
+function stop() 
+{
   clearInterval(intervalId);
   gameMusic.pause();
 }
@@ -285,23 +178,18 @@ function catchedBanana() {
         (
           (banana.right()  < monkey.right() && banana.right() > monkey.left()) ||
           (banana.left() > monkey.left() && banana.left() < monkey.right() )
-        ) // checking if both the ends of banana is touching the monkey
+        ) // checking  if both the ends of banana is touching the monkey
       )  
       {
         score += 10;
         console.log(score);
-
         bananas.splice(bananas.indexOf(banana),1) // remove catched banana
-
       }
-    
   });
-
 }
 
 function checkGameOver()
 {
-
   bananas.forEach(banana => {
     if (
       banana.y > canvas.height   // checking if banana cross the canvas
@@ -311,8 +199,6 @@ function checkGameOver()
       bananas.splice(bananas.indexOf(banana),1) // remove missed banana from array because triggering multiple times      
     }
   });
-
-  //console.log(missedbananas);
   if(missedbananas > 20)
     doGameOver();
 }
@@ -320,22 +206,52 @@ function checkGameOver()
 function doGameOver() {
     stop();
     monkeyCry.play();
-  //console.log("gamOver")
     gamearea.style.display = 'none';
     restartdiv.style.display = 'block';
     gameover.style.display = 'block';
-    
 }
 
-function fillscore(){
-
+function fillscore()
+{
   ctx.fillStyle = "#EC6467";
   ctx.font = "22px Pacifico";
   ctx.fillText(`Score: ${score}`, 75, 45);
   ctx.fillText(`Bananas Missed: ${missedbananas}`, 800, 45);
-
 }
 
+window.addEventListener("load",() => {
+    drawBackground(); 
+  //button start - Start Game
+  startBtn.addEventListener("click", () => {
+    intervalId = setInterval(updateGame, 20);
+    gameMusic.play();
+    startGame();
+  });
+  
+  restart.addEventListener("click", () => {
+    console.log("hh");
+    intervalId = setInterval(updateGame, 20);
+    startGame();
+    gameMusic.play();
+  });
 
+});
 
+document.addEventListener('keydown', event => {
+  switch (event.keyCode) {
+    case 37:
+      monkey.movingLeft = true;
+      monkey.movingRight = false;
+      break;
+    case 39:
+      monkey.movingRight=true;
+      monkey.movingLeft = false;
+      break;
+  }
+});
 
+document.addEventListener("keyup", () => {
+  monkey.movingLeft = false;
+  monkey.movingRight = false;
+ 
+}); 
