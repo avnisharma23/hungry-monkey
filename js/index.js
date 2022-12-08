@@ -60,7 +60,7 @@ class Banana {
     }
     this.x = Math.random() * (canvas.width); //randomly generates banana from X axis
 
-    if(this.x + this.img.width > canvas.width)  //check if babana is outside of canvas
+    if(this.x + this.img.width > canvas.width)  //check if banana is outside of canvas
       this.x = this.x - this.img.width;         //shift the banana if its outside the canvas
 
     this.y = Math.random() * (canvas.height / 4); //randomly generates banana from y axis
@@ -201,6 +201,7 @@ function checkGameOver()
   });
   if(missedbananas > 20)
     doGameOver();
+    
 }
 
 function doGameOver() {
